@@ -2,55 +2,48 @@
 #include <stdio.h>
 
 /**
- * _printf - Receives the main string and all the necessary parameters to
- * print a formated string
- * You don’t have to reproduce the buffer handling of the C library
- * printf function
- * You don’t have to handle the flag characters
- * You don’t have to handle field width
- * You don’t have to handle precision
- * You don’t have to handle the length modifiers
- * @format: A string containing all the desired characters
- *
- * Return: A total count of the characters printed
+ * _printf - produces output according to a format
+ * @format: format string containing the characters and the specifiers
+ * Description: this function will call the get_print() function that will
+ * determine which printing function to call depending on the conversion
+ * specifiers contained into fmt
+ * Return: length of the formatted output string
  */
 
 int _printf(const char *format, ...)
 {
+	int count = 0;
+	va_list args;
+	va_start(args, format);
 
-int count = 0;
-va_list args;
-va_start(args, format);
+	while (*format)
+	{
+		if (*format == '%')
+		{
+		format++;
+		switch (*format)
+		{
+		case 'c':
+		count += putchar(va_arg(args, int));
+		break;
+		case 's':
+		{
+	const char *str = va_arg(args, const char *);
+		count += printf("%s", str);
+		break;
+		}
+		case '%':
+		count += putchar('%');
+		break;
+		}
+		}
+		else
+		{
+			count += putchar(*format);
+		}
+		format++;
+	}
+	va_end(args);
 
-while (*format != '\0')
-{
-if (*format == 'c')
-{
-
-char c = va_arg(args, int);
-
-putchar(c);
-count++;
-}
-else if (*format == '')
-{
-
-char *s = va_arg(args, char*);
-
-while (*s != '\0')
-{
-putchar(*s);
-count++;
-s++;
-}
-}
-else if (*format == '%')
-{
-putchar('%');
-count++;
-}
-format++;
-}
-va_end(args);
-return (count);
+	return (count);
 }
