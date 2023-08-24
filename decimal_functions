@@ -1,0 +1,108 @@
+#include "main.h"
+
+/**
+ * getAbsoluteValue - Gets the absolute value of a number.
+ * @number: The number to find the absolute value of.
+ * Return: The absolute value of the number.
+ */
+int getAbsoluteValue(int number)
+{
+    if (number < 0)
+    {
+        number = number * -1;
+        return number;
+    }
+    return number;
+}
+
+/**
+ * convertToNumberString - Converts an integer to a string in a given base.
+ * @value: The integer value to convert.
+ * @base: The numerical base for the conversion.
+ * Return: A pointer to the string representing the converted value.
+ */
+char *convertToNumberString(int value, int base)
+{
+    char buffer[1024];
+    int number, i;
+
+    if (base < 2 || base > 32)
+        exit(1);
+
+    number = getAbsoluteValue(value);
+
+    i = 0;
+
+    while (number)
+    {
+        int remainder = number % base;
+
+        remainder = getAbsoluteValue(remainder);
+        if (remainder >= 10)
+            buffer[i] = 'A' + (remainder - 10);
+        else
+            buffer[i] = '0' + remainder;
+        i++;
+        number = number / base;
+    }
+
+    if (i == 0)
+    {
+        buffer[i] = '0';
+        i++;
+    }
+
+    if (value < 0 && base == 10)
+    {
+        buffer[i] = '-';
+        i++;
+    }
+
+    buffer[i] = '\0';
+
+    return reverseString(buffer, i);
+}
+
+/**
+ * convertToUppercaseNumberString - Converts an unsigned integer to a string
+ *                                  in a given base with uppercase letters.
+ * @value: The unsigned integer value to convert.
+ * @base: The numerical base for the conversion.
+ * Return: A pointer to the string representing the converted value.
+ */
+char *convertToUppercaseNumberString(unsigned int value, unsigned int base)
+{
+    char buffer[1024];
+    unsigned int i, remainder;
+
+    if (base < 2 || base > 32)
+        exit(1);
+
+    i = 0;
+    while (value)
+    {
+        remainder = value % base;
+
+        if (remainder >= 10)
+        {
+            buffer[i] = 'A' + (remainder - 10);
+            if (buffer[i] >= 'A' && buffer[i] <= 'Z')
+                buffer[i] += 32;
+        }
+        else
+            buffer[i] = '0' + remainder;
+
+        i++;
+        value = value / base;
+    }
+
+    if (i == 0)
+    {
+        buffer[i] = '0';
+        i++;
+    }
+
+    buffer[i] = '\0';
+
+    return reverseString(buffer, i);
+}
